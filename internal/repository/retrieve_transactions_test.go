@@ -34,7 +34,7 @@ func Test_impl_RetrieveTransactionsByFromAddress(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			r := New()
+			r := New("db_connection")
 			// Mock block insertion.
 			if err := r.InsertBlockAndTransactions(context.Background(), mockBlock1); err != nil {
 				t.Errorf("failed to insert mock data, err: %v", err)
@@ -84,7 +84,7 @@ func Test_impl_RetrieveTransactionsByToAddress(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			r := New()
+			r := New("db_connection")
 			// Mock block insertion.
 			if err := r.InsertBlockAndTransactions(context.Background(), mockBlock1); err != nil {
 				t.Errorf("failed to insert mock data, err: %v", err)
