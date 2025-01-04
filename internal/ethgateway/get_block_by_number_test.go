@@ -6,7 +6,6 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/Unbeliever1987/ethparser/internal/ethgateway"
 	"github.com/Unbeliever1987/ethparser/internal/model"
 )
 
@@ -62,7 +61,7 @@ func Test_impl_GetBlockByNumber(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			// TODO: to change to a test host name.
-			ethGwy := ethgateway.New("https://ethereum-rpc.publicnode.com", http.DefaultClient)
+			ethGwy := New("https://ethereum-rpc.publicnode.com", http.DefaultClient)
 
 			got, err := ethGwy.GetBlockByNumber(context.Background(), tt.args.number)
 			if (err != nil) != tt.wantErr {
@@ -70,7 +69,7 @@ func Test_impl_GetBlockByNumber(t *testing.T) {
 				return
 			}
 
-			// To many transactions in one block, just check the first 5 trasnactions.
+			// Too many transactions in one block, just check the first 5 trasnactions.
 			got.Transactions = got.Transactions[:5]
 			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("impl.GetBlockByNumber() = %v, want %v", got, tt.want)

@@ -9,6 +9,7 @@ import (
 
 type Repository interface {
 	InsertBlockAndTransactions(ctx context.Context, block model.Block) error
+	RetrieveBlockByNumber(ctx context.Context, number uint64) (model.Block, error)
 	RetrieveLatestBlock(ctx context.Context) (model.Block, error)
 	RetrieveTransactionsByFromAddress(ctx context.Context, address string) ([]model.Transaction, error)
 	RetrieveTransactionsByToAddress(ctx context.Context, address string) ([]model.Transaction, error)
@@ -25,12 +26,12 @@ type ormTransaction struct {
 	amount string
 }
 
-type repository struct {
+type impl struct {
 	mu           sync.Mutex
 	blocks       []ormBlock
 	transactions []ormTransaction
 }
 
 func New() Repository {
-	return &repository{}
+	return &impl{}
 }

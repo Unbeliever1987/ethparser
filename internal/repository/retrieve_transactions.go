@@ -7,12 +7,12 @@ import (
 )
 
 // RetrieveTransactionsByFromAddress implements Repository.
-func (r *repository) RetrieveTransactionsByFromAddress(ctx context.Context, address string) ([]model.Transaction, error) {
-	r.mu.Lock()
-	defer r.mu.Unlock()
+func (i *impl) RetrieveTransactionsByFromAddress(ctx context.Context, address string) ([]model.Transaction, error) {
+	i.mu.Lock()
+	defer i.mu.Unlock()
 
 	var transactions []model.Transaction
-	for _, transaction := range r.transactions {
+	for _, transaction := range i.transactions {
 		if transaction.from != address {
 			continue
 		}
@@ -26,7 +26,7 @@ func (r *repository) RetrieveTransactionsByFromAddress(ctx context.Context, addr
 }
 
 // RetrieveTransactionsByToAddress implements Repository.
-func (r *repository) RetrieveTransactionsByToAddress(ctx context.Context, address string) ([]model.Transaction, error) {
+func (r *impl) RetrieveTransactionsByToAddress(ctx context.Context, address string) ([]model.Transaction, error) {
 	r.mu.Lock()
 	defer r.mu.Unlock()
 

@@ -7,9 +7,9 @@ import (
 )
 
 // InsertBlockAndTransactions implements Repository.
-func (r *repository) InsertBlockAndTransactions(ctx context.Context, block model.Block) error {
-	r.mu.Lock()
-	defer r.mu.Unlock()
+func (i *impl) InsertBlockAndTransactions(ctx context.Context, block model.Block) error {
+	i.mu.Lock()
+	defer i.mu.Unlock()
 
 	var transactionRefs []*ormTransaction
 	for _, transaction := range block.Transactions {
@@ -19,11 +19,11 @@ func (r *repository) InsertBlockAndTransactions(ctx context.Context, block model
 			amount: transaction.Amount,
 		}
 
-		r.transactions = append(r.transactions, ormTransaction)
+		i.transactions = append(i.transactions, ormTransaction)
 		transactionRefs = append(transactionRefs, &ormTransaction)
 	}
 
-	r.blocks = append(r.blocks, ormBlock{
+	i.blocks = append(i.blocks, ormBlock{
 		number:       block.Number,
 		transactions: transactionRefs,
 	})
