@@ -4,6 +4,7 @@ import (
 	"context"
 	"net/http"
 
+	"github.com/Unbeliever1987/ethparser/internal/ethblocksyncer"
 	"github.com/Unbeliever1987/ethparser/internal/ethgateway"
 	"github.com/Unbeliever1987/ethparser/internal/model"
 	"github.com/Unbeliever1987/ethparser/internal/repository"
@@ -20,12 +21,15 @@ type Parser interface {
 
 type impl struct {
 	repository repository.Repository
-	ethgateway ethgateway.Gateway
 }
 
-func New(dbconn, ethHost, startBlockNumber string) Parser {
+func New(ctx context.Context, dbconn, ethHost, startBlockNumber string) Parser {
+	repository := repository.New(dbconn)
+	ethGateway := ethgateway.New(ethHost, http.DefaultClient)
+	syncer := ethblocksyncer.New(repository, ethGateway)
+	syncer.Run(ctx, startBlockNumber)
+
 	return &impl{
-		repository: repository.New(dbconn),
-		ethgateway: ethgateway.New(ethHost, http.DefaultClient),
+		repository: repository,
 	}
 }

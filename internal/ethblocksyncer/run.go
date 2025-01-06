@@ -2,11 +2,13 @@ package ethblocksyncer
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"log"
 	"time"
 
 	"github.com/Unbeliever1987/ethparser/internal/model"
+	"github.com/Unbeliever1987/ethparser/internal/repository"
 )
 
 func (s Runner) Run(ctx context.Context, blockNumber string) {
@@ -30,6 +32,11 @@ func (s Runner) sync(ctx context.Context, blockNumber string) error {
 	block, err := s.ethGateway.GetBlockByNumber(ctx, blockNumber)
 	if err != nil {
 		return fmt.Errorf("failed to get block by number, err: %v", err)
+	}
+
+	// Check if block is already inserted. If inserted, skip the process.
+	if _, err = s.repository.RetrieveBlockByNumber(ctx, block.Number); !errors.Is(err, repository.ErrBlockNotFound) {
+		return nil
 	}
 
 	var filteredBlock model.Block
